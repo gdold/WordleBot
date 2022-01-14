@@ -22,3 +22,5 @@ Basic solve of today's Wordle:
     🟩🟩🟩🟩🟩
 
 For more detailed usage, see [Usage.ipynb](Usage.ipynb)
+
+The bot uses a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](CreateScoredDictionary.ipynb) for details. 
