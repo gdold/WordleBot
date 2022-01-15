@@ -7,9 +7,9 @@ from .Guesser import Guesser
 
 
 class WordleBot:
-    """This bot solves wordles. It's probably not very efficient. Or particularly well-written. Or even good at what it does."""
+    """This bot solves wordles. It's probably not very efficient, but it's fairly good at what it does."""
     
-    def __init__(self,strategy="scored",dark_mode=True):
+    def __init__(self,wordle=None,strategy="entropy",dark_mode=True):
         self.dictionary = scored_dictionary
         self.wordles = wordles
         
@@ -31,12 +31,26 @@ class WordleBot:
             self.wrong_square='⬛'
         else:
             self.wrong_square='⬜'
+            
+        if not wordle or wordle == 'todays': # pretty frustrating that 'today' is a valid wordle
+            self.pick_todays_wordle()
+        elif wordle == 'random':
+            self.pick_random_wordle()
+        elif type(wordle) == int:
+            if wordle >= len(self.wordles) or wordle < 0:
+                raise ValueError('Wordle number out of range, choose a number between 0 and {max_wordle_number}'.format(max_wordle_number = len(self.wordles)))
+            self.pick_wordle(wordle)
+        elif type(wordle) == str:
+            self.check_valid(wordle)
+            self.set_wordle(wordle)
+        else:
+            raise ValueError("Invalid wordle argument. Leave empty for today's wordle, set 'random' for a random wordle, choose a number between 0 and {max_wordle_number} for that wordle number, or enter a valid 5-letter word to set that as the wordle.".format(max_wordle_number = len(self.wordles)))
     
     def set_wordle(self,wordle):
         self.wordle = wordle
     
     def pick_wordle(self,wordle_number):
-        self.wordle = self.set_wordle(self.wordles[wordle_number])
+        self.set_wordle(self.wordles[wordle_number])
         
     def pick_random_wordle(self):
         self.wordle = random.choice(self.wordles)
@@ -46,10 +60,7 @@ class WordleBot:
         self.wordle = self.wordles[wordle_number]
         
     def check_valid(self,guess):
-        """Check the wordle has been set, and make sure the guess is a dictionary-valid 5-letter word."""
-        #print(guess)
-        if not self.wordle:
-            raise SyntaxError('You haven\'t initialised the bot with a wordle! Use set_wordle() or pick_wordle().')
+        """Check the word is a dictionary-valid 5-letter word."""
         if len(guess) != 5:
             raise ValueError('Word "{guess}" does not have 5 letters.'.format(guess=guess))
         if guess not in self.dictionary:
@@ -122,10 +133,18 @@ class WordleBot:
         
     def filter_possible_words(self):
         """Filter the list of remaining possible words by: 
-        1. correctly placed letters; 
-        2. misplaced letters; 
-        3. letters the word must contain; 
-        4. letters the word must not contain"""
+        1. already guessed words
+        2. correctly placed letters; 
+        3. misplaced letters; 
+        4. letters the word must contain; 
+        5. letters the word must not contain"""
+        # filter by previously guessed words
+        # these should have already been removed in make_guess()
+        # but let's make sure in case something happened out of order
+        if self.list_of_guesses:
+            filter_by_guessed_words = re.compile('(?!('+'|'.join(self.list_of_guesses)+'))')
+            self.possible_words = list(filter(filter_by_guessed_words.match,self.possible_words))
+            
         # filter by the correctly placed letters
         filter_by_correct_letters = re.compile(''.join(self.correct_letters))
         self.possible_words = list(filter(filter_by_correct_letters.match,self.possible_words))
@@ -147,18 +166,16 @@ class WordleBot:
             self.possible_words = list(filter(filter_by_exclude_letters.match,self.possible_words))
         
     def make_guess(self):
+        """Guess the next word based on the chosen strategy"""
         guess=self.guesser.make_guess(self.possible_words)
-        self.possible_words.remove(guess) # Without this can end up in infinite loop - don't want to guess same word twice anyway
+        self.possible_words.remove(guess) # Ensure that guessed word is removed from possible future words
         return guess
         
 
         
     def solve(self):
-        """Set today's wordle (if not already set) and solve as naively as possible"""
-        if not self.wordle:
-            self.pick_todays_wordle()
-        
-        while not self.solved and self.num_of_guesses < 30:
+        """Loop round, filtering posible words and guessing according to the chosen strategy"""
+        while not self.solved and self.num_of_guesses < 30: # If not guessed in 30, something's gone wrong
             self.filter_possible_words()
             guess = self.make_guess()
             self.check_guess(guess)
