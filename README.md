@@ -7,7 +7,7 @@ The source code contains the full dictionary and list of wordles from the origin
 
 ## Usage
 
-Download [WordleBot.py](WordleBot.py)
+Download [WordleBot](WordleBot)
 
 Basic solve of today's Wordle:
 
