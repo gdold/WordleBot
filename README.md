@@ -13,7 +13,6 @@ Basic solve of today's Wordle:
 
     from WordleBot import WordleBot
     bot = WordleBot()
-    bot.set_todays_wordle()
     bot.solve()
 
     🟨🟩⬛⬛⬛
@@ -21,6 +20,11 @@ Basic solve of today's Wordle:
     ⬛🟩🟩🟩🟩
     🟩🟩🟩🟩🟩
 
-For more detailed usage, see [Usage.ipynb](Usage.ipynb)
+For more detailed usage, see [Usage.ipynb](docs/Usage.ipynb).
 
-The bot uses a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](CreateScoredDictionary.ipynb) for details. 
+The bot can employ any of three strategies, a comparison of which can be seen in [StrategyBenchmarks.ipynb](docs/StrategyBenchmarks.ipynb):
+- "entropy" which guesses the word that most reduces the entropy in a list of possible words at each stage
+- "scored" which chooses the highest-scored word from a pre-sorted list of words, ranked according to the occurrence of unique common letters
+- "random" which picks a random possible word  
+
+The bot includes a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](docs/CreateScoredDictionary.ipynb) for details. 
