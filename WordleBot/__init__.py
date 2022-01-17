@@ -2,7 +2,7 @@ import re #regex for filtering dictionary
 import random #picking random words and wordles
 import datetime #for today's wordle
 
-from .wordle_dictionary import *
+from .wordle_dictionary import scored_dictionary,wordles
 from .Guesser import Guesser
 
 
