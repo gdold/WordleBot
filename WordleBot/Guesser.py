@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from .wordle_dictionary import popularity_dict
 class Guesser:
     """This class handles guessing strategies. It is sent a strategy name on initialization and sets its guessing function
     to one of the strategy functions.
@@ -83,4 +83,5 @@ class Guesser:
                 expect+=(orange_count/n_words)*(n_words-orange_count)
                 expect+=(white_count/n_words)*(n_words-white_count)
                 done.append(letter)
+            expect+=popularity_dict[guess]
         return expect
