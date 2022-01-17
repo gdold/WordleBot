@@ -7,13 +7,14 @@ from .Guesser import Guesser
 
 
 class WordleBot:
-    """This bot solves wordles. It's probably not very efficient, but it's fairly good at what it does."""
+    """This bot solves wordles."""
     
-    def __init__(self,wordle=None,strategy="entropy",dark_mode=True):
+    def __init__(self,wordle=None,strategy="entropy",dark_mode=True,emoji=True,show_all_lines=False):
         self.dictionary = scored_dictionary
         self.wordles = wordles
         
         self.wordle = None
+        self.wordle_number = None
         self.possible_words = self.dictionary
         
         self.solved = False
@@ -27,10 +28,9 @@ class WordleBot:
         self.misplaced_letters_regex = list('.....')
         self.guesser=Guesser(strategy)
         
-        if dark_mode:
-            self.wrong_square='⬛'
-        else:
-            self.wrong_square='⬜'
+        self.emoji = emoji
+        self.dark_mode = dark_mode
+        self.show_all_lines = show_all_lines
             
         if not wordle or wordle == 'todays': # pretty frustrating that 'today' is a valid wordle
             self.pick_todays_wordle()
@@ -50,14 +50,15 @@ class WordleBot:
         self.wordle = wordle
     
     def pick_wordle(self,wordle_number):
+        self.wordle_number = wordle_number
         self.set_wordle(self.wordles[wordle_number])
         
     def pick_random_wordle(self):
         self.wordle = random.choice(self.wordles)
         
     def pick_todays_wordle(self):
-        wordle_number = (datetime.datetime.now()-datetime.datetime(2021,6,19)).days
-        self.wordle = self.wordles[wordle_number]
+        self.wordle_number = (datetime.datetime.now()-datetime.datetime(2021,6,19)).days
+        self.wordle = self.wordles[self.wordle_number]
         
     def check_valid(self,guess):
         """Check the word is a dictionary-valid 5-letter word."""
@@ -83,9 +84,59 @@ class WordleBot:
         self.list_of_colours.append(new_colours)
         return new_colours
     
-    def print_colours(self):
+    def prepare_colours(self):
         """Convert the ascii array of colours to print emoji instead"""
-        [print(string.replace('b',self.wrong_square).replace('y','🟨').replace('g','🟩')) for string in self.list_of_colours];
+        list_of_colours = self.list_of_colours
+        
+        if not self.show_all_lines and len(list_of_colours)>6:
+            list_of_colours = list_of_colours[:6]
+        
+        if self.dark_mode:
+            wrong_square='⬛'
+        else:
+            wrong_square='⬜'
+            
+        prepared_list = [string.replace('b',wrong_square).replace('y','🟨').replace('g','🟩') for string in list_of_colours]
+        
+        return '\n'.join(prepared_list)
+        
+    def prepare_ascii(self):
+        """Just print the ascii array of colours, no conversion to emoji"""
+        list_of_colours = self.list_of_colours
+        
+        if not self.show_all_lines and len(list_of_colours)>6:
+            list_of_colours = list_of_colours[:6]
+            
+        return '\n'.join(list_of_colours)
+        
+    def show_result(self):
+        if self.emoji:
+            prefix_txt = 'WordleBot 🤖 '
+        else:
+            prefix_txt = 'WordleBot '
+        if self.wordle_number:
+            num_txt = '{} '.format(self.wordle_number)
+        else:
+            num_txt = ''
+        if self.num_of_guesses < 7:
+            score_txt = '{}/6'.format(self.num_of_guesses)
+        else:
+            score_txt = 'X/6'
+            
+        first_line = prefix_txt+num_txt+score_txt
+        
+        
+        if self.emoji:
+            colours_txt = self.prepare_colours()
+        else:
+            colours_txt = self.prepare_ascii()
+            
+        result_txt = first_line+'\n\n'+colours_txt
+        
+        print(result_txt)
+        
+        return result_txt
+        
     
     def check_letters(self,guess):
         """Check how the guess matches up to the wordle, and update the lists of letters"""
@@ -180,5 +231,4 @@ class WordleBot:
             guess = self.make_guess()
             self.check_guess(guess)
 
-        self.print_colours()
-
+        self.show_result()
