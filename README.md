@@ -15,10 +15,14 @@ Basic solve of today's Wordle:
     bot = WordleBot()
     bot.solve()
 
-    🟨🟩⬛⬛⬛
-    ⬛🟩🟨🟩🟩
-    ⬛🟩🟩🟩🟩
+
+    WordleBot 🤖 212 4/6
+
+    🟩⬛⬛🟩🟩
+    🟩⬛🟩🟩🟩
+    🟩⬛🟩🟩🟩
     🟩🟩🟩🟩🟩
+
 
 For more detailed usage, see [Usage.ipynb](Usage.ipynb).
 
@@ -26,5 +30,6 @@ The bot can employ any of three strategies, a comparison of which can be seen in
 - "entropy" which guesses the word that most reduces the entropy in a list of possible words at each stage
 - "scored" which chooses the highest-scored word from a pre-sorted list of words, ranked according to the occurrence of unique common letters
 - "random" which picks a random possible word  
+For "entropy" and "scored" solvers, if all else is equal, the bot chooses the word that is more frequently used.
 
-The bot includes a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](CreateScoredDictionary.ipynb) for details. 
+The bot uses a dictionary of word frequencies, scraped from Google Ngrams, as well as a list of words scored by the occurrence of unique common letters. See [scrape_word_popularities.py](utils/scrape_word_popularities.py) and [CreateScoredDictionary.ipynb](utils/CreateScoredDictionary.ipynb) for details. 
