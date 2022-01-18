@@ -41,4 +41,4 @@ The bot can employ any of three strategies, a comparison of which can be seen in
 - "scored" which chooses the highest-scored word from a pre-sorted list of words, ranked according to the occurrence of unique common letters
 - "random" which picks a random possible word  
 
-The bot includes a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](CreateScoredDictionary.ipynb) for details. 
+The bot includes a dictionary that has been scored by the occurrence of unique common letters, and sorted by that score. See [CreateScoredDictionary.ipynb](utils/CreateScoredDictionary.ipynb) for details. 
