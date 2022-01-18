@@ -5,22 +5,36 @@ This python bot automatically solves the word-deduction game **[Wordle](https://
 
 The source code contains the full dictionary and list of wordles from the original game - be careful if inspecting to avoid spoilers.
 
+## Installation
+
+Download this repo
+To install, run `python setup.py install`
+
 ## Usage
 
-Download [WordleBot](WordleBot)
+WordleBot installs as a python library and a console script. You can call it direct from the command line (optionally specifying the wordle number, a 5-letter word, or `random`):
 
-Basic solve of today's Wordle:
-
-    from WordleBot import WordleBot
-    bot = WordleBot()
-    bot.solve()
-
-    🟨🟩⬛⬛⬛
-    ⬛🟩🟨🟩🟩
+    $ wordlebot
+    WordleBot 🤖 210 4/6
+    
+    ⬛⬛🟨⬛⬛
+    ⬛🟩⬛🟩🟨
     ⬛🟩🟩🟩🟩
     🟩🟩🟩🟩🟩
 
-For more detailed usage, see [Usage.ipynb](Usage.ipynb).
+or import is a a python library:
+
+    >>> from WordleBot import WordleBot
+    >>> bot = WordleBot()
+    >>> bot.solve()
+    WordleBot 🤖 210 4/6
+    
+    ⬛⬛🟨⬛⬛
+    ⬛🟩⬛🟩🟨
+    ⬛🟩🟩🟩🟩
+    🟩🟩🟩🟩🟩
+
+For more detailed usage, run `wordlebot -h` or see [Usage.ipynb](Usage.ipynb).
 
 The bot can employ any of three strategies, a comparison of which can be seen in [StrategyBenchmarks.ipynb](StrategyBenchmarks.ipynb):
 - "entropy" which guesses the word that most reduces the entropy in a list of possible words at each stage

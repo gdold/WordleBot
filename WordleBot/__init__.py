@@ -2,6 +2,8 @@ import re #regex for filtering dictionary
 import random #picking random words and wordles
 import datetime #for today's wordle
 
+from argparse import ArgumentParser # for invoking from command line
+
 from .wordle_dictionary import scored_dictionary,wordles
 from .Guesser import Guesser
 
@@ -232,3 +234,37 @@ class WordleBot:
             self.check_guess(guess)
 
         self.show_result()
+        
+def run_bot(*args, **kwargs):
+    bot = WordleBot(*args, **kwargs)
+    bot.solve()
+    
+def run_bot_from_cmd():
+    arguments = parse_args()
+    
+    # If wordle argument is number (and not None), convert from str to int
+    arguments.wordle
+    if arguments.wordle and all(map(str.isdigit,arguments.wordle)):
+        arguments.wordle = int(arguments.wordle)
+    
+    run_bot(wordle=arguments.wordle,
+          strategy=arguments.strategy,
+         dark_mode=arguments.dark_mode,
+             emoji=arguments.emoji,
+    show_all_lines=arguments.show_all_lines)
+    
+def parse_args():
+    parser = ArgumentParser(description= "This bot solves wordles. Invoking with no arguments solves today's wordle, or you can pass it a wordle number or 5-letter word to solve for.")
+    parser.add_argument('wordle', type=str, help="Optional. Either a wordle number between 0 and 2315, a 5-letter word to guess, or the string 'random' to choose a random wordle. If not specified, solves today's wordle.", nargs='?', default=None)
+    parser.add_argument('--strategy', type=str, help="The strategy to employ. Choose from 'entropy' (best but slowest), 'scored', or 'random'.", choices=['entropy','scored','random'], default='entropy')
+    #parser.add_argument('--dark_mode', dest='dark_mode', action='store_true')
+    parser.add_argument('--light-mode', dest='dark_mode', action='store_false', default=True, help="Replaces dark squares with light squares.")    
+    #parser.add_argument('--emoji', dest='emoji', action='store_true')
+    parser.add_argument('--no-emoji', dest='emoji', action='store_false', default=True, help="Removes emoji from output, useful if your terminal does not support emoji.")    
+    parser.add_argument('--show-all-lines', dest='show_all_lines', action='store_true', default=False, help="Shows all lines in the bot's solution, even if it fails (takes more than 6 guesses).")
+    
+    
+    arguments=parser.parse_args()
+    #print(arguments)
+    
+    return arguments
