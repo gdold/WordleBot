@@ -7,7 +7,7 @@ The source code contains the full dictionary and list of wordles from the origin
 
 ## Installation
 
-Download this repo
+Download this repo.  
 To install, run `python setup.py install`
 
 ## Usage
