@@ -1,5 +1,0 @@
-#!/usr/bin/env python
-from WordleBot import WordleBot
-
-bot = WordleBot()
-bot.solve()
