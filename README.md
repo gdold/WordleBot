@@ -7,12 +7,13 @@ The source code contains the full dictionary and list of wordles from the origin
 
 ## Installation
 
-Download this repo.  
-To install, run `python setup.py install`
+`pip install wordlesolver`
+
+Or, download this repo and run `python setup.py install`
 
 ## Usage
 
-WordleBot installs as a python library and a console script. You can call it direct from the command line (optionally specifying the wordle number, a 5-letter word, or `random`):
+WordleBot installs as a python library and a console script. You can call it direct from the command line (with the commands `wordlebot` or `wordlesolver`), optionally specifying the wordle number, a 5-letter word, or `random`:
 
     $ wordlebot
     WordleBot 🤖 210 4/6
