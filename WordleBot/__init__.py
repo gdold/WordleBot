@@ -86,7 +86,7 @@ class WordleBot:
         self.list_of_colours.append(new_colours)
         return new_colours
     
-    def prepare_colours(self):
+    def prepare_emoji_colours(self):
         """Convert the ascii array of colours to print emoji instead"""
         list_of_colours = self.list_of_colours
         
@@ -102,14 +102,16 @@ class WordleBot:
         
         return '\n'.join(prepared_list)
         
-    def prepare_ascii(self):
+    def prepare_ascii_colours(self):
         """Just print the ascii array of colours, no conversion to emoji"""
         list_of_colours = self.list_of_colours
         
         if not self.show_all_lines and len(list_of_colours)>6:
             list_of_colours = list_of_colours[:6]
             
-        return '\n'.join(list_of_colours)
+        prepared_list = [string.replace('b',' ').replace('y','▓').replace('g','█') for string in list_of_colours]
+        
+        return '\n'.join(prepared_list)
         
     def show_result(self):
         if self.emoji:
@@ -129,9 +131,9 @@ class WordleBot:
         
         
         if self.emoji:
-            colours_txt = self.prepare_colours()
+            colours_txt = self.prepare_emoji_colours()
         else:
-            colours_txt = self.prepare_ascii()
+            colours_txt = self.prepare_ascii_colours()
             
         result_txt = first_line+'\n\n'+colours_txt
         
