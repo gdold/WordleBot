@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "wordlesolver",
-    version = "0.2",
+    version = "0.2.1",
     author='Gavin Dold',
     description='This bot solves wordles.',
     url='https://github.com/gdold/WordleBot',
